@@ -1,74 +1,256 @@
-import { Image, StyleSheet, Platform } from "react-native";
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Battery, MapPin, User, ChevronRight, Plus, Award } from 'react-native-feather';
 
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-
-export default function HomeScreen() {
+export default function AppScreens() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Tarun</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: "cmd + d", android: "cmd + m" })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView style={styles.container}>
+      {/* Home Screen */}
+      <View style={styles.card}>
+        <Text style={styles.title}>Welcome, John</Text>
+        <View style={styles.rowBetween}>
+          <Text style={styles.subtitle}>Your Batteries</Text>
+          <TouchableOpacity>
+            <Plus stroke="green" width={24} height={24} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.batteryItem}>
+          <View style={styles.row}>
+            <Battery stroke="green" width={24} height={24} style={styles.icon} />
+            <Text style={styles.batteryText}>AA-123456</Text>
+          </View>
+          <Text style={styles.batteryHealth}>Health: 85%</Text>
+        </View>
+        <View style={styles.batteryItem}>
+          <View style={styles.row}>
+            <Battery stroke="orange" width={24} height={24} style={styles.icon} />
+            <Text style={styles.batteryText}>AAA-789012</Text>
+          </View>
+          <Text style={styles.batteryHealth}>Health: 62%</Text>
+        </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Find Recycling Center</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Battery Details Screen */}
+      <View style={styles.card}>
+        <Text style={styles.title}>Battery Details</Text>
+        <View style={styles.detailsCard}>
+          <Text style={styles.subtitle}>AA-123456</Text>
+          <Text style={styles.detailText}>Type: AA</Text>
+          <Text style={styles.detailText}>Health: 85%</Text>
+          <Text style={styles.detailText}>Est. Lifecycle: 3 months</Text>
+          <Text style={styles.detailText}>Last Check: 2 days ago</Text>
+        </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Recycle Now</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.outlineButton}>
+          <Text style={styles.outlineButtonText}>View Usage History</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Map View */}
+      <View style={styles.card}>
+        <Text style={styles.title}>Nearby Recycling Centers</Text>
+        <View style={styles.mapPlaceholder}>
+          <Text style={styles.mapPlaceholderText}>Map View</Text>
+        </View>
+        <View style={styles.recycleCenter}>
+          <View>
+            <Text style={styles.recycleCenterName}>EcoRecycle Center</Text>
+            <Text style={styles.recycleCenterDistance}>0.5 miles away</Text>
+          </View>
+          <MapPin stroke="green" width={24} height={24} />
+        </View>
+        <View style={styles.recycleCenter}>
+          <View>
+            <Text style={styles.recycleCenterName}>GreenTech Recycling</Text>
+            <Text style={styles.recycleCenterDistance}>1.2 miles away</Text>
+          </View>
+          <MapPin stroke="green" width={24} height={24} />
+        </View>
+      </View>
+
+      {/* Profile/Settings Screen */}
+      <View style={styles.card}>
+        <Text style={styles.title}>Profile</Text>
+        <View style={styles.profileHeader}>
+          <Image
+            source={{ uri: 'https://via.placeholder.com/100' }}
+            style={styles.profileImage}
+          />
+          <View>
+            <Text style={styles.profileName}>John Doe</Text>
+            <Text style={styles.profileEmail}>john.doe@example.com</Text>
+          </View>
+        </View>
+        <TouchableOpacity style={styles.menuItem}>
+          <View style={styles.row}>
+            <Award stroke="green" width={24} height={24} style={styles.icon} />
+            <Text style={styles.menuItemText}>Rewards</Text>
+          </View>
+          <ChevronRight stroke="#999" width={24} height={24} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View style={styles.row}>
+            <Battery stroke="green" width={24} height={24} style={styles.icon} />
+            <Text style={styles.menuItemText}>My Batteries</Text>
+          </View>
+          <ChevronRight stroke="#999" width={24} height={24} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View style={styles.row}>
+            <User stroke="green" width={24} height={24} style={styles.icon} />
+            <Text style={styles.menuItemText}>Account Settings</Text>
+          </View>
+          <ChevronRight stroke="#999" width={24} height={24} />
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
   },
-  stepContainer: {
-    gap: 8,
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    margin: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '600',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  batteryItem: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  batteryText: {
+    fontWeight: '500',
+  },
+  batteryHealth: {
+    color: '#666',
+  },
+  button: {
+    backgroundColor: 'green',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  outlineButton: {
+    borderColor: 'green',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  outlineButtonText: {
+    color: 'green',
+    fontWeight: '600',
+  },
+  detailsCard: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+  },
+  detailText: {
+    marginBottom: 4,
+  },
+  mapPlaceholder: {
+    height: 200,
+    backgroundColor: '#ddd',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  mapPlaceholderText: {
+    color: '#666',
+  },
+  recycleCenter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+  },
+  recycleCenterName: {
+    fontWeight: '500',
+  },
+  recycleCenterDistance: {
+    color: '#666',
+  },
+  profileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  profileImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginRight: 16,
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  profileEmail: {
+    color: '#666',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  menuItemText: {
+    fontSize: 16,
+  },
+  icon: {
+    marginRight: 8,
   },
 });
