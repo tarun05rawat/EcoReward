@@ -32,13 +32,16 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName="signin">
-        {" "}
-        {/* Set initial route here */}
-        <Stack.Screen name="signin" options={{ headerShown: false }} />{" "}
-        {/* Sign-in screen */}
-        <Stack.Screen name="signup" options={{ headerShown: false }} />{" "}
-        {/* Sign-up screen */}
+        {/* Sign-in screen path (maps to app/signin.tsx) */}
+        <Stack.Screen name="signin" options={{ headerShown: false }} />
+
+        {/* Sign-up screen path (maps to app/signup.tsx) */}
+        <Stack.Screen name="signup" options={{ headerShown: false }} />
+
+        {/* Tabs layout (maps to app/(tabs)/_layout.tsx) */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+        {/* Not-found screen path (maps to app/+not-found.tsx) */}
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
