@@ -5,7 +5,6 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import config from "@tamagui/config";
 
-
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -40,7 +39,7 @@ export default function TabLayout() {
             />
           ),
         }}
-      /> */}
+      />
       <Tabs.Screen
         name="profile"
         options={{
