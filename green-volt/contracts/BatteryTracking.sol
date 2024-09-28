@@ -1,31 +1,64 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract BatteryTracking {
+contract BatteryRecycling {
+    address public owner;
 
-    struct UserData {
-        uint256 batteriesBought;
-        uint256 batteriesReturned;
+    // Structure to store battery details
+    struct Battery {
+        uint256 id;
+        address owner;
+        bool isRecycled;
+        uint256 rewardAmount;
     }
 
-    mapping(address => UserData) public users;
+    // Mapping of battery IDs to battery data
+    mapping(uint256 => Battery) public batteries;
 
-    event BatteryPurchased(address indexed user, uint256 amount);
-    event BatteryReturned(address indexed user, uint256 amount, uint256 reward);
+    // Event to trigger when battery is recycled
+    event BatteryRecycled(uint256 batteryId, address user, uint256 reward);
 
-    function purchaseBattery(uint256 amount) external {
-        users[msg.sender].batteriesBought += amount;
-        emit BatteryPurchased(msg.sender, amount);
+    // Modifier to ensure only the owner can call certain functions
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not authorized");
+        _;
     }
 
-    function returnBattery(uint256 amount) external {
-        users[msg.sender].batteriesReturned += amount;
-        uint256 reward = amount * 10;  // Dummy reward calculation
-        emit BatteryReturned(msg.sender, amount, reward);
+    constructor() {
+        owner = msg.sender;  // Assign the contract deployer as the owner
     }
 
-    function getUserData(address _user) external view returns (uint256 batteriesBought, uint256 batteriesReturned) {
-        UserData memory data = users[_user];
-        return (data.batteriesBought, data.batteriesReturned);
+    // Function to register a new battery
+    function registerBattery(uint256 batteryId, uint256 rewardAmount) public onlyOwner {
+        require(batteries[batteryId].id == 0, "Battery already registered");
+        
+        batteries[batteryId] = Battery({
+            id: batteryId,
+            owner: address(0),  // No owner until it's claimed
+            isRecycled: false,
+            rewardAmount: rewardAmount
+        });
+    }
+
+    // Function to recycle a battery
+    function recycleBattery(uint256 batteryId) public {
+        require(batteries[batteryId].id != 0, "Battery not registered");
+        require(!batteries[batteryId].isRecycled, "Battery already recycled");
+
+        // Mark the battery as recycled and assign the owner
+        batteries[batteryId].isRecycled = true;
+        batteries[batteryId].owner = msg.sender;
+
+        // Transfer reward (you could use ERC20 tokens here for real rewards)
+        uint256 reward = batteries[batteryId].rewardAmount;
+        
+        // Emit an event that the battery was recycled
+        emit BatteryRecycled(batteryId, msg.sender, reward);
+    }
+
+    // Function to get battery information (for UI display)
+    function getBatteryInfo(uint256 batteryId) public view returns (address, bool, uint256) {
+        Battery memory battery = batteries[batteryId];
+        return (battery.owner, battery.isRecycled, battery.rewardAmount);
     }
 }
