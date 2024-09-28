@@ -5,6 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import config from "@tamagui/config";
 
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -27,6 +28,7 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="explore"
         options={{
@@ -38,11 +40,12 @@ export default function TabLayout() {
             />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
-        name="camera"
+        name="profile"
         options={{
-          title: "Camera",
+          title: "Profile",
+
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
