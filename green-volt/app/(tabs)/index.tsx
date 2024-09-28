@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Battery, MapPin, User, ChevronRight, Plus, Award } from 'react-native-feather';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { Battery, MapPin, Plus } from 'react-native-feather';
 
 export default function AppScreens() {
   return (
     <ScrollView style={styles.container}>
-      {/* Home Screen */}
+      {/* Battery Options */}
       <View style={styles.card}>
-        <Text style={styles.title}>Welcome, John</Text>
+        <Text style={styles.title}>Your Batteries</Text>
         <View style={styles.rowBetween}>
-          <Text style={styles.subtitle}>Your Batteries</Text>
+          <Text style={styles.subtitle}>Registered Batteries</Text>
           <TouchableOpacity>
             <Plus stroke="green" width={24} height={24} />
           </TouchableOpacity>
@@ -29,29 +29,14 @@ export default function AppScreens() {
           <Text style={styles.batteryHealth}>Health: 62%</Text>
         </View>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Find Recycling Center</Text>
+          <Text style={styles.buttonText}>Add New Battery</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Battery Details Screen */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Battery Details</Text>
-        <View style={styles.detailsCard}>
-          <Text style={styles.subtitle}>AA-123456</Text>
-          <Text style={styles.detailText}>Type: AA</Text>
-          <Text style={styles.detailText}>Health: 85%</Text>
-          <Text style={styles.detailText}>Est. Lifecycle: 3 months</Text>
-          <Text style={styles.detailText}>Last Check: 2 days ago</Text>
-        </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Recycle Now</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.outlineButton}>
-          <Text style={styles.outlineButtonText}>View Usage History</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Battery Details */}
+      
 
-      {/* Map View */}
+      {/* Nearby Recycling Centers */}
       <View style={styles.card}>
         <Text style={styles.title}>Nearby Recycling Centers</Text>
         <View style={styles.mapPlaceholder}>
@@ -71,41 +56,8 @@ export default function AppScreens() {
           </View>
           <MapPin stroke="green" width={24} height={24} />
         </View>
-      </View>
-
-      {/* Profile/Settings Screen */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Profile</Text>
-        <View style={styles.profileHeader}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/100' }}
-            style={styles.profileImage}
-          />
-          <View>
-            <Text style={styles.profileName}>John Doe</Text>
-            <Text style={styles.profileEmail}>john.doe@example.com</Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <Award stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>Rewards</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <Battery stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>My Batteries</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <User stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>Account Settings</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Find More Centers</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -220,35 +172,6 @@ const styles = StyleSheet.create({
   },
   recycleCenterDistance: {
     color: '#666',
-  },
-  profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  profileImage: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginRight: 16,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  profileEmail: {
-    color: '#666',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  menuItemText: {
-    fontSize: 16,
   },
   icon: {
     marginRight: 8,
