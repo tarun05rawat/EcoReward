@@ -1,8 +1,23 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Battery, MapPin, User, ChevronRight, Plus, Award } from 'react-native-feather';
+import React from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Platform,
+} from "react-native";
+import {
+  Battery,
+  MapPin,
+  User,
+  ChevronRight,
+  Plus,
+  Award,
+} from "react-native-feather";
 
-export default function AppScreens() {
+export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
       {/* Home Screen */}
@@ -16,14 +31,24 @@ export default function AppScreens() {
         </View>
         <View style={styles.batteryItem}>
           <View style={styles.row}>
-            <Battery stroke="green" width={24} height={24} style={styles.icon} />
+            <Battery
+              stroke="green"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.batteryText}>AA-123456</Text>
           </View>
           <Text style={styles.batteryHealth}>Health: 85%</Text>
         </View>
         <View style={styles.batteryItem}>
           <View style={styles.row}>
-            <Battery stroke="orange" width={24} height={24} style={styles.icon} />
+            <Battery
+              stroke="orange"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.batteryText}>AAA-789012</Text>
           </View>
           <Text style={styles.batteryHealth}>Health: 62%</Text>
@@ -78,7 +103,7 @@ export default function AppScreens() {
         <Text style={styles.title}>Profile</Text>
         <View style={styles.profileHeader}>
           <Image
-            source={{ uri: 'https://via.placeholder.com/100' }}
+            source={{ uri: "https://via.placeholder.com/100" }}
             style={styles.profileImage}
           />
           <View>
@@ -95,7 +120,12 @@ export default function AppScreens() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.row}>
-            <Battery stroke="green" width={24} height={24} style={styles.icon} />
+            <Battery
+              stroke="green"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>My Batteries</Text>
           </View>
           <ChevronRight stroke="#999" width={24} height={24} />
@@ -115,14 +145,14 @@ export default function AppScreens() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
     padding: 16,
     margin: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -130,64 +160,64 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   batteryItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   batteryText: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
   batteryHealth: {
-    color: '#666',
+    color: "#666",
   },
   button: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     borderRadius: 8,
     padding: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 8,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
   },
   outlineButton: {
-    borderColor: 'green',
+    borderColor: "green",
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 8,
   },
   outlineButtonText: {
-    color: 'green',
-    fontWeight: '600',
+    color: "green",
+    fontWeight: "600",
   },
   detailsCard: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -197,33 +227,33 @@ const styles = StyleSheet.create({
   },
   mapPlaceholder: {
     height: 200,
-    backgroundColor: '#ddd',
+    backgroundColor: "#ddd",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 16,
   },
   mapPlaceholderText: {
-    color: '#666',
+    color: "#666",
   },
   recycleCenter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
   recycleCenterName: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
   recycleCenterDistance: {
-    color: '#666',
+    color: "#666",
   },
   profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   profileImage: {
@@ -234,18 +264,18 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   profileEmail: {
-    color: '#666',
+    color: "#666",
   },
   menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   menuItemText: {
     fontSize: 16,
