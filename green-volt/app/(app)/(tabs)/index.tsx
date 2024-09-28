@@ -59,7 +59,7 @@ export default function HomeScreen() {
       </View>
 
       {/* Battery Details Screen */}
-      <View style={styles.card}>
+      {/* <View style={styles.card}>
         <Text style={styles.title}>Battery Details</Text>
         <View style={styles.detailsCard}>
           <Text style={styles.subtitle}>AA-123456</Text>
@@ -74,7 +74,7 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.outlineButton}>
           <Text style={styles.outlineButtonText}>View Usage History</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Map View */}
       <View style={styles.card}>
