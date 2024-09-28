@@ -1,46 +1,45 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import "react-native-reanimated";
+import React, { useEffect, useState } from "react";
+import { Redirect, Stack } from "expo-router";
+import "../../firebaseConfig";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
-
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
+export default function AppLayout() {
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const auth = getAuth();
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    // onAuthStateChanged(auth, setUser);
+    const unsub = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      if (user) {
+        // console.log("HERE!");
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsub();
+  }, []);
 
-  if (!loaded) {
+  if (user === undefined) {
+    // Optionally, return a loading indicator here
     return null;
   }
+  // useEffect(() => {
+  // }, [user]);
+  // Can also keep the splash screen open until the user is loaded.
+  // if (user === null) {
+  //     return <Redirect href='/signin' />;
+  // }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName="signin">
-        {" "}
-        {/* Set initial route here */}
-        <Stack.Screen name="signin" options={{ headerShown: false }} />{" "}
-        {/* Sign-in screen */}
-        <Stack.Screen name="signup" options={{ headerShown: false }} />{" "}
-        {/* Sign-up screen */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <>
+      {user ? (
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      ) : (
+        <Redirect href="/signin" />
+      )}
+    </>
   );
 }
