@@ -44,7 +44,7 @@ export default function SignInScreen() {
     >
       <Stack id="logo" marginTop={40} space={20}>
         <Image
-          source={require("./(components)/green-volt-logo.webp")} // Correct the path to your logo
+          source={require("./(components)/green-volt-logo.png")} // Correct the path to your logo
           style={{ width: 300, height: 250, marginBottom: 10, marginTop: -30 }}
           resizeMode="contain"
         />
