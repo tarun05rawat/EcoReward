@@ -59,7 +59,7 @@ export default function EmailPasswordButtonBox(props: {
         onPress={props.handleSignIn}
         disabled={props.loading}
         backgroundColor="$blue10"
-        hoverStyle={{ backgroundColor: "$blue9" }}
+        hoverStyle={{ backgroundColor: "#a1bb76" }}
         fontFamily="$body"
         color="white"
         shadowColor="$shadowColor"

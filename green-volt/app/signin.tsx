@@ -19,7 +19,7 @@ export default function SignInScreen() {
         password
       );
       const user = userCredential.user;
-      router.replace("/(app)/(tabs)/profile");
+      router.replace("/(app)/(tabs)/");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -69,7 +69,7 @@ export default function SignInScreen() {
           <Button
             title="Sign Up"
             onPress={() => router.replace("/signup")}
-            color="#1E90FF"
+            color="black"
           />
         </View>
       </View>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#2b2433",
+    backgroundColor: "#a1bb76",
     padding: 24,
     paddingTop: 40,
   },
@@ -91,10 +91,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: 300,
-    height: 250,
-    marginBottom: 10,
+    width: 400,
+    height: 350,
     marginTop: -30,
+    backgroundColor: 'transparent',
   },
   signInBox: {
     margin: 60,
