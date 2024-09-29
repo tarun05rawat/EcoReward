@@ -1,10 +1,10 @@
 export default DATA = [
   {
     uid: "user1",
-    email: "john.doe@example.com",
-    name: "John Doe",
+    email: "tanmaydabhade80@gmail.com",
+    name: "Tanmay Dabhade",
     profile: {
-      location: "New York, USA",
+      location: "East Lansing, Michigan",
       verified: true,
     },
     recyclingEvents: [
@@ -13,10 +13,10 @@ export default DATA = [
         date: "2024-09-01",
         location: "Recycling Center 1",
         recycledItems: [
-          { item: "Battery", quantity: 4 },
+          { item: "Battery", quantity: 14 },
           { item: "Plastic Bottle", quantity: 12 },
         ],
-        incentiveEarned: 15.5,
+        incentiveEarned: 30,
       },
     ],
   },

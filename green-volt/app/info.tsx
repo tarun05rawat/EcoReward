@@ -27,9 +27,9 @@ export default function InfoScreen() {
     version: "1.0.0",
     description: "EcoReward is a product recycling platform designed to incentivize sustainable practices by automatically rewarding users when they return batteries to authorized recycling centers. Our app uses advanced tracking and machine learning to manage the recycling process efficiently.",
     creators: [
-      { name: "Jane Doe", role: "Lead Developer", linkedin: "https://www.linkedin.com/in/janedoe" },
-      { name: "John Smith", role: "Backend Specialist", linkedin: "https://www.linkedin.com/in/johnsmith" },
-      { name: "Emily Brown", role: "UI/UX Designer", linkedin: "https://www.linkedin.com/in/emilybrown" },
+      { name: "Siddhesh Kulkarni", role: "Developer", linkedin: "https://www.linkedin.com/in/siddhesh-kulkarni05/" },
+      { name: "Tarun Rawat", role: "Developer", linkedin: "https://www.linkedin.com/in/tarun05rawat/" },
+      { name: "Tanmay Dabhade", role: "Developer", linkedin: "https://www.linkedin.com/in/tanmay-dabhade/" },
     ],
     goals: [
       "Promote sustainable recycling practices",
@@ -56,7 +56,7 @@ export default function InfoScreen() {
 
       <ScrollView style={styles.content}>
         <Image
-          source={{ uri: 'https://example.com/ecoreward-logo.png' }}  // Replace with actual image URL
+          source={{ uri: '' }}  // Replace with actual image URL
           style={styles.logo}
         />
         <Text style={styles.appName}>{appInfo.name}</Text>

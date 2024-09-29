@@ -19,7 +19,7 @@ export default function RewardScreen() {
   const rewards: Reward[] = [
     { id: 1, name: 'Eco-friendly Water Bottle', points: 500, icon: 'water-outline', type: 'product' },
     { id: 2, name: 'Reusable Shopping Bag', points: 300, icon: 'bag-handle-outline', type: 'product' },
-    { id: 3, name: 'Plant a Tree', points: 1000, icon: 'leaf-outline', type: 'action' },
+    // { id: 3, name: 'Plant a Tree', points: 1000, icon: 'leaf-outline', type: 'action' },
     { id: 4, name: '$5 Gift Card', points: 2000, icon: 'card-outline', type: 'giftcard' },
     { 
       id: 5, 

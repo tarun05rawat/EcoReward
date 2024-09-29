@@ -91,7 +91,7 @@ export default function AskMePage() {
         >
           <ScrollView contentContainerStyle={styles.scrollView}>
             <View style={styles.card}>
-              <Text style={styles.heading}>Ask Me</Text>
+              <Text style={styles.heading}>Hi! I am Jack, ask me anything about sustainability...</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Type your question here..."
@@ -159,10 +159,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   heading: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#6B46C1",
-    textAlign: "center",
+    textAlign: "left",
     marginBottom: 20,
   },
   input: {
