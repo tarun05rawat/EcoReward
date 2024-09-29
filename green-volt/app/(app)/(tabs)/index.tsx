@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -8,41 +8,16 @@ import {
   Image,
   Alert,
   FlatList,
-  ActivityIndicator,
 } from "react-native";
 import { HelpCircle, LifeBuoy, Settings, LogOut } from "react-native-feather";
 import { useRouter } from "expo-router";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import DATA from "../../data"; // Assuming your user data is imported here
-
-interface UserProfile {
-  location: string;
-  verified: boolean;
-}
-
-interface RecyclingEvent {
-  id: string;
-  date: string;
-  location: string;
-  recycledItems: { item: string; quantity: number }[];
-  incentiveEarned: number;
-}
-
-interface UserData {
-  uid: string;
-  email: string;
-  name: string;
-  profile: UserProfile;
-  recyclingEvents: RecyclingEvent[];
-}
+import { getAuth, signOut } from "firebase/auth";
+import DATA from "../../data"; // Make sure to import your data correctly
 
 export default function ProfileScreen() {
-  const [currentUserData, setCurrentUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true); // For loading state while fetching user data
   const router = useRouter();
   const auth = getAuth();
 
-  // Function to handle logout
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -55,48 +30,12 @@ export default function ProfileScreen() {
       });
   };
 
-  // Function to get user data based on the currently signed-in user's UID
-  const fetchUserData = (uid: string) => {
-    // Filter the user data from DATA using the UID
-    const userData = DATA.find((user) => user.uid === uid);
-    if (userData) {
-      setCurrentUserData(userData);
-    } else {
-      Alert.alert("Error", "User data not found.");
-    }
-    setLoading(false);
-  };
-
-  // Listen to authentication state and fetch the correct user data
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, fetch the user data using the UID
-        fetchUserData(user.uid);
-      } else {
-        // No user is signed in, redirect to sign-in page
-        router.replace("/signin");
-      }
-    });
-
-    return () => unsubscribe(); // Cleanup listener on unmount
-  }, []);
-
-  // Loading state when fetching user data
-  if (loading) {
-    return <ActivityIndicator size="large" color="#4F7942" />;
+  interface Item {
+    item: string;
+    quantity: number;
   }
 
-  // if (!currentUserData) {
-  //   return (
-  //     <View style={styles.errorContainer}>
-  //       <Text style={styles.errorText}>User data not found.</Text>
-  //     </View>
-  //   );
-  // }
-
-  // Rendering recycled items
-  const renderItem = ({ item }: { item: { item: string; quantity: number } }) => (
+  const renderItem = ({ item }: { item: Item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemName}>{item.item}</Text>
       <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
@@ -105,66 +44,56 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {currentUserData ? (
-        <>
-          <View style={styles.header}>
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }}
-              style={styles.profileImage}
+      <View style={styles.header}>
+        <Image
+          source={{ uri: "https://via.placeholder.com/150" }}
+          style={styles.profileImage}
+        />
+        <Text style={styles.profileName}>{DATA[0].name}</Text>
+        <Text style={styles.profileEmail}>{DATA[0].email}</Text>
+      </View>
+
+      {/* Display CITY, POINTS, and RANKING side by side */}
+      <View style={styles.infoRow}>
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>CITY</Text>
+          <Text style={styles.sectionContent}>{DATA[0].profile.location}</Text>
+        </View>
+
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>POINTS</Text>
+          <Text style={styles.sectionContent}>
+            {DATA[0].recyclingEvents.reduce(
+              (acc, event) => acc + event.incentiveEarned,
+              0
+            )}{" "}
+            points
+          </Text>
+        </View>
+
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>RANKING</Text>
+          <Text style={styles.sectionContent}>#42 in your city</Text>
+        </View>
+      </View>
+
+      <View style={styles.recentItemsContainer}>
+        <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
+        {DATA[0].recyclingEvents.map((event) => (
+          <View key={event.id} style={styles.eventContainer}>
+            <Text style={styles.eventDate}>Date: {event.date}</Text>
+            <Text style={styles.eventLocation}>Location: {event.location}</Text>
+            <FlatList
+              data={event.recycledItems}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.item}
             />
-            <Text style={styles.profileName}>{currentUserData.name}</Text>
-            <Text style={styles.profileEmail}>{currentUserData.email}</Text>
+            <Text style={styles.incentiveEarned}>
+              Incentive Earned: ${event.incentiveEarned}
+            </Text>
           </View>
-
-          {/* Display CITY, POINTS, and RANKING side by side */}
-          <View style={styles.infoRow}>
-            <View style={styles.infoSection}>
-              <Text style={styles.sectionHeader}>CITY</Text>
-              <Text style={styles.sectionContent}>
-                {currentUserData.profile.location}
-              </Text>
-            </View>
-
-            <View style={styles.infoSection}>
-              <Text style={styles.sectionHeader}>POINTS</Text>
-              <Text style={styles.sectionContent}>
-                {currentUserData.recyclingEvents.reduce(
-                  (acc, event) => acc + event.incentiveEarned,
-                  0
-                )}{" "}
-                points
-              </Text>
-            </View>
-
-            <View style={styles.infoSection}>
-              <Text style={styles.sectionHeader}>RANKING</Text>
-              <Text style={styles.sectionContent}>#42 in your city</Text>
-            </View>
-          </View>
-
-          <View style={styles.recentItemsContainer}>
-            <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
-            {currentUserData.recyclingEvents.map((event) => (
-              <View key={event.id} style={styles.eventContainer}>
-                <Text style={styles.eventDate}>Date: {event.date}</Text>
-                <Text style={styles.eventLocation}>
-                  Location: {event.location}
-                </Text>
-                <FlatList
-                  data={event.recycledItems}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item.item}
-                />
-                <Text style={styles.incentiveEarned}>
-                  Incentive Earned: ${event.incentiveEarned}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </>
-      ) : (
-        <ActivityIndicator size="large" color="#4F7942" />
-      )}
+        ))}
+      </View>
 
       <View style={styles.menuSection}>
         <Text style={styles.sectionTitle}>Support</Text>
