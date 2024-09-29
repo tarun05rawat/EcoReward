@@ -19,7 +19,7 @@ export default function SignUpScreen() {
         password
       );
       const user = userCredential.user;
-      router.replace("/(app)");
+      router.replace("/(app)/(tabs)/profile");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#2b2433",
+    backgroundColor: "#a1bb76",
     padding: 24,
     paddingTop: 40,
   },

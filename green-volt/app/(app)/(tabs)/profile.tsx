@@ -7,18 +7,19 @@ import {
   StyleSheet,
   Image,
   Alert,
+  FlatList,
 } from "react-native";
-import {
-  User,
-  ChevronRight,
-  Award,
-  Battery,
-  Bell,
-  HelpCircle,
-  LogOut,
-} from "react-native-feather";
-import { getAuth, signOut } from "firebase/auth";
+import { Award, Battery, Bell, HelpCircle, LogOut } from "react-native-feather";
 import { useRouter } from "expo-router";
+import { getAuth, signOut } from "firebase/auth";
+
+const RECENT_ITEMS = [
+  { id: "1", name: "AA Battery", date: "2023-09-25" },
+  { id: "2", name: "Coca Cola Can", date: "2023-09-24" },
+  { id: "3", name: "Harry Potter Book", date: "2023-09-23" },
+  { id: "4", name: "Move-in Carton", date: "2023-09-22" },
+  { id: "5", name: "Old Floppy Disk", date: "2023-09-21" },
+];
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -32,9 +33,20 @@ export default function ProfileScreen() {
         ]);
       })
       .catch((error) => {
-        Alert.alert("Error", `Failed to log out: ${error.message}`);
+        Alert.alert("Error", "An unexpected error occurred. Please try again.");
       });
   };
+
+  const renderItem = ({
+    item,
+  }: {
+    item: { id: string; name: string; date: string };
+  }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={styles.itemDate}>{item.date}</Text>
+    </View>
+  );
 
   return (
     <ScrollView style={styles.container}>
@@ -45,71 +57,34 @@ export default function ProfileScreen() {
         />
         <Text style={styles.profileName}>John Doe</Text>
         <Text style={styles.profileEmail}>john.doe@example.com</Text>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
       </View>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>15</Text>
-          <Text style={styles.statLabel}>Batteries</Text>
+      {/* Display CITY, POINTS, and RANKING side by side */}
+      <View style={styles.infoRow}>
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>CITY</Text>
+          <Text style={styles.sectionContent}>New York City</Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>250</Text>
-          <Text style={styles.statLabel}>Points</Text>
+
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>POINTS</Text>
+          <Text style={styles.sectionContent}>250 points</Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>8</Text>
-          <Text style={styles.statLabel}>Recycled</Text>
+
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>RANKING</Text>
+          <Text style={styles.sectionContent}>#42 in your city</Text>
         </View>
       </View>
 
-      <View style={styles.menuSection}>
-        <Text style={styles.sectionTitle}>Account</Text>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Award stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>Rewards</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Battery
-              stroke="green"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuItemText}>My Batteries</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Bell stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>Notifications</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.title}>Battery Details</Text>
-        <View style={styles.detailsCard}>
-          <Text style={styles.subtitle}>AA-123456</Text>
-          <Text style={styles.detailText}>Type: AA</Text>
-          <Text style={styles.detailText}>Health: 85%</Text>
-          <Text style={styles.detailText}>Est. Lifecycle: 3 months</Text>
-          <Text style={styles.detailText}>Last Check: 2 days ago</Text>
-        </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Recycle Now</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.outlineButton}>
-          <Text style={styles.outlineButtonText}>View Usage History</Text>
-        </TouchableOpacity>
+      <View style={styles.recentItemsContainer}>
+        <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
+        <FlatList
+          data={RECENT_ITEMS}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.recentItemsList}
+        />
       </View>
 
       <View style={styles.menuSection}>
@@ -117,21 +92,24 @@ export default function ProfileScreen() {
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.menuItemLeft}>
             <HelpCircle
-              stroke="green"
+              stroke="#4F7942"
               width={24}
               height={24}
               style={styles.icon}
             />
             <Text style={styles.menuItemText}>Help Center</Text>
           </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.menuItemLeft}>
-            <User stroke="green" width={24} height={24} style={styles.icon} />
+            <Award
+              stroke="#4F7942"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>Account Settings</Text>
           </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
       </View>
 
@@ -146,69 +124,103 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 15,
   },
   header: {
     backgroundColor: "white",
     alignItems: "center",
-    padding: 20,
+    padding: 25,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
+    marginBottom: 15,
+    borderRadius: 10,
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: "#4F7942",
   },
   profileName: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 26,
+    fontWeight: "700",
     marginBottom: 5,
+    color: "#333",
   },
   profileEmail: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 10,
+    fontSize: 15,
+    color: "#777",
   },
-  editButton: {
-    backgroundColor: "green",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  editButtonText: {
-    color: "white",
-    fontWeight: "600",
-  },
-  statsContainer: {
+  infoRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  infoSection: {
+    flex: 1,
     backgroundColor: "white",
-    paddingVertical: 15,
+    padding: 15,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4F7942",
+    marginBottom: 5,
+  },
+  sectionContent: {
+    fontSize: 16,
+    color: "#333",
+  },
+  recentItemsContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  recentItemsTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+    color: "#333",
+  },
+  recentItemsList: {
+    maxHeight: 200,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
   },
-  statItem: {
-    alignItems: "center",
+  itemName: {
+    fontSize: 16,
+    color: "#333",
   },
-  statValue: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "green",
-  },
-  statLabel: {
+  itemDate: {
     fontSize: 14,
-    color: "#666",
+    color: "#777",
   },
   menuSection: {
     backgroundColor: "white",
-    marginTop: 20,
-    paddingVertical: 10,
+    marginTop: 15,
+    paddingVertical: 12,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
     paddingHorizontal: 15,
     paddingVertical: 10,
     color: "#333",
@@ -217,8 +229,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
   },
@@ -228,71 +240,20 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    marginLeft: 10,
+    marginLeft: 12,
+    color: "#333",
   },
   icon: {
     marginRight: 8,
-  },
-  card: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    padding: 16,
-    margin: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  button: {
-    backgroundColor: "green",
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "600",
-  },
-  outlineButton: {
-    borderColor: "green",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  outlineButtonText: {
-    color: "green",
-    fontWeight: "600",
-  },
-  detailsCard: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  detailText: {
-    marginBottom: 4,
   },
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    marginTop: 20,
+    marginTop: 25,
     paddingVertical: 15,
+    borderRadius: 10,
   },
   logoutButtonText: {
     color: "red",
