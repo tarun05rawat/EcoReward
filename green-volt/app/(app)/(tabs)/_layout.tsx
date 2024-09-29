@@ -1,9 +1,8 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import config from "@tamagui/config";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -20,9 +19,10 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <Ionicons
               name={focused ? "home" : "home-outline"}
               color={color}
+              size={24}
             />
           ),
         }}
@@ -33,9 +33,12 @@ export default function TabLayout() {
         options={{
           title: "Ask Me",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+            <Ionicons
+              name={
+                focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"
+              }
               color={color}
+              size={24}
             />
           ),
         }}
@@ -46,9 +49,10 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+            <Ionicons
+              name={focused ? "compass" : "compass-outline"}
               color={color}
+              size={24}
             />
           ),
         }}
