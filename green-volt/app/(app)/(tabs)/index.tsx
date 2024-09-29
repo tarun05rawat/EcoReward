@@ -9,25 +9,10 @@ import {
   Alert,
   FlatList,
 } from "react-native";
-import {
-  Award,
-  Battery,
-  Bell,
-  HelpCircle,
-  LogOut,
-  Settings,
-  LifeBuoy,
-} from "react-native-feather";
+import { HelpCircle, LifeBuoy, Settings, LogOut } from "react-native-feather";
 import { useRouter } from "expo-router";
 import { getAuth, signOut } from "firebase/auth";
-
-const RECENT_ITEMS = [
-  { id: "1", name: "AA Battery", date: "2023-09-25" },
-  { id: "2", name: "Coca Cola Can", date: "2023-09-24" },
-  { id: "3", name: "Harry Potter Book", date: "2023-09-23" },
-  { id: "4", name: "Move-in Carton", date: "2023-09-22" },
-  { id: "5", name: "Old Floppy Disk", date: "2023-09-21" },
-];
+import DATA from "../../data"; // Make sure to import your data correctly
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -45,14 +30,15 @@ export default function ProfileScreen() {
       });
   };
 
-  const renderItem = ({
-    item,
-  }: {
-    item: { id: string; name: string; date: string };
-  }) => (
+  interface Item {
+    item: string;
+    quantity: number;
+  }
+
+  const renderItem = ({ item }: { item: Item }) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemDate}>{item.date}</Text>
+      <Text style={styles.itemName}>{item.item}</Text>
+      <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
     </View>
   );
 
@@ -63,20 +49,26 @@ export default function ProfileScreen() {
           source={{ uri: "https://via.placeholder.com/150" }}
           style={styles.profileImage}
         />
-        <Text style={styles.profileName}>John Doe</Text>
-        <Text style={styles.profileEmail}>john.doe@example.com</Text>
+        <Text style={styles.profileName}>{DATA[0].name}</Text>
+        <Text style={styles.profileEmail}>{DATA[0].email}</Text>
       </View>
 
       {/* Display CITY, POINTS, and RANKING side by side */}
       <View style={styles.infoRow}>
         <View style={styles.infoSection}>
           <Text style={styles.sectionHeader}>CITY</Text>
-          <Text style={styles.sectionContent}>New York City</Text>
+          <Text style={styles.sectionContent}>{DATA[0].profile.location}</Text>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.sectionHeader}>POINTS</Text>
-          <Text style={styles.sectionContent}>250 points</Text>
+          <Text style={styles.sectionContent}>
+            {DATA[0].recyclingEvents.reduce(
+              (acc, event) => acc + event.incentiveEarned,
+              0
+            )}{" "}
+            points
+          </Text>
         </View>
 
         <View style={styles.infoSection}>
@@ -87,12 +79,20 @@ export default function ProfileScreen() {
 
       <View style={styles.recentItemsContainer}>
         <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
-        <FlatList
-          data={RECENT_ITEMS}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          style={styles.recentItemsList}
-        />
+        {DATA[0].recyclingEvents.map((event) => (
+          <View key={event.id} style={styles.eventContainer}>
+            <Text style={styles.eventDate}>Date: {event.date}</Text>
+            <Text style={styles.eventLocation}>Location: {event.location}</Text>
+            <FlatList
+              data={event.recycledItems}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.item}
+            />
+            <Text style={styles.incentiveEarned}>
+              Incentive Earned: ${event.incentiveEarned}
+            </Text>
+          </View>
+        ))}
       </View>
 
       <View style={styles.menuSection}>
@@ -227,8 +227,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#333",
   },
-  recentItemsList: {
-    maxHeight: 200,
+  eventContainer: {
+    marginBottom: 15,
+  },
+  eventDate: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  eventLocation: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 10,
   },
   itemContainer: {
     flexDirection: "row",
@@ -242,9 +251,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
-  itemDate: {
+  itemQuantity: {
     fontSize: 14,
     color: "#777",
+  },
+  incentiveEarned: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#4F7942",
   },
   menuSection: {
     backgroundColor: "white",
