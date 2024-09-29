@@ -6,138 +6,119 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Platform,
+  Alert,
+  FlatList,
 } from "react-native";
-import {
-  Battery,
-  MapPin,
-  User,
-  ChevronRight,
-  Plus,
-  Award,
-} from "react-native-feather";
+import { Award, Battery, Bell, HelpCircle, LogOut, Settings, LifeBuoy } from "react-native-feather";
+import { useRouter } from "expo-router";
+import { getAuth, signOut } from "firebase/auth";
 
-export default function HomeScreen() {
+const RECENT_ITEMS = [
+  { id: "1", name: "AA Battery", date: "2023-09-25" },
+  { id: "2", name: "Coca Cola Can", date: "2023-09-24" },
+  { id: "3", name: "Harry Potter Book", date: "2023-09-23" },
+  { id: "4", name: "Move-in Carton", date: "2023-09-22" },
+  { id: "5", name: "Old Floppy Disk", date: "2023-09-21" },
+];
+
+export default function ProfileScreen() {
+  const router = useRouter();
+  const auth = getAuth();
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        Alert.alert("Logged Out", "You have been logged out successfully.", [
+          { text: "OK", onPress: () => router.replace("/signin") },
+        ]);
+      })
+      .catch((error) => {
+        Alert.alert("Error", "An unexpected error occurred. Please try again.");
+      });
+  };
+
+  const renderItem = ({
+    item,
+  }: {
+    item: { id: string; name: string; date: string };
+  }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={styles.itemDate}>{item.date}</Text>
+    </View>
+  );
+
   return (
     <ScrollView style={styles.container}>
-      {/* Home Screen */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Welcome, John</Text>
-        <View style={styles.rowBetween}>
-          <Text style={styles.subtitle}>Your Batteries</Text>
-          <TouchableOpacity>
-            <Plus stroke="green" width={24} height={24} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.batteryItem}>
-          <View style={styles.row}>
-            <Battery
-              stroke="green"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.batteryText}>AA-123456</Text>
-          </View>
-          <Text style={styles.batteryHealth}>Health: 85%</Text>
-        </View>
-        <View style={styles.batteryItem}>
-          <View style={styles.row}>
-            <Battery
-              stroke="orange"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.batteryText}>AAA-789012</Text>
-          </View>
-          <Text style={styles.batteryHealth}>Health: 62%</Text>
-        </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Find Recycling Center</Text>
-        </TouchableOpacity>
+      <View style={styles.header}>
+        <Image
+          source={{ uri: "https://via.placeholder.com/150" }}
+          style={styles.profileImage}
+        />
+        <Text style={styles.profileName}>John Doe</Text>
+        <Text style={styles.profileEmail}>john.doe@example.com</Text>
       </View>
 
-      {/* Battery Details Screen */}
-      {/* <View style={styles.card}>
-        <Text style={styles.title}>Battery Details</Text>
-        <View style={styles.detailsCard}>
-          <Text style={styles.subtitle}>AA-123456</Text>
-          <Text style={styles.detailText}>Type: AA</Text>
-          <Text style={styles.detailText}>Health: 85%</Text>
-          <Text style={styles.detailText}>Est. Lifecycle: 3 months</Text>
-          <Text style={styles.detailText}>Last Check: 2 days ago</Text>
+      {/* Display CITY, POINTS, and RANKING side by side */}
+      <View style={styles.infoRow}>
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>CITY</Text>
+          <Text style={styles.sectionContent}>New York City</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Recycle Now</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.outlineButton}>
-          <Text style={styles.outlineButtonText}>View Usage History</Text>
-        </TouchableOpacity>
-      </View> */}
 
-      {/* Map View */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Nearby Recycling Centers</Text>
-        <View style={styles.mapPlaceholder}>
-          <Text style={styles.mapPlaceholderText}>Map View</Text>
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>POINTS</Text>
+          <Text style={styles.sectionContent}>250 points</Text>
         </View>
-        <View style={styles.recycleCenter}>
-          <View>
-            <Text style={styles.recycleCenterName}>EcoRecycle Center</Text>
-            <Text style={styles.recycleCenterDistance}>0.5 miles away</Text>
-          </View>
-          <MapPin stroke="green" width={24} height={24} />
-        </View>
-        <View style={styles.recycleCenter}>
-          <View>
-            <Text style={styles.recycleCenterName}>GreenTech Recycling</Text>
-            <Text style={styles.recycleCenterDistance}>1.2 miles away</Text>
-          </View>
-          <MapPin stroke="green" width={24} height={24} />
+
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionHeader}>RANKING</Text>
+          <Text style={styles.sectionContent}>#42 in your city</Text>
         </View>
       </View>
 
-      {/* Profile/Settings Screen */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Profile</Text>
-        <View style={styles.profileHeader}>
-          <Image
-            source={{ uri: "https://via.placeholder.com/100" }}
-            style={styles.profileImage}
-          />
-          <View>
-            <Text style={styles.profileName}>John Doe</Text>
-            <Text style={styles.profileEmail}>john.doe@example.com</Text>
+      <View style={styles.recentItemsContainer}>
+        <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
+        <FlatList
+          data={RECENT_ITEMS}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.recentItemsList}
+        />
+      </View>
+
+      <View style={styles.menuSection}>
+        <Text style={styles.sectionTitle}>Support</Text>
+
+        {/* Info Page */}
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/info")}>
+          <View style={styles.menuItemLeft}>
+            <HelpCircle stroke="#4F7942" width={24} height={24} style={styles.icon} />
+            <Text style={styles.menuItemText}>Info</Text>
           </View>
-        </View>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <Award stroke="green" width={24} height={24} style={styles.icon} />
-            <Text style={styles.menuItemText}>Rewards</Text>
-          </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <Battery
-              stroke="green"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuItemText}>My Batteries</Text>
+
+        {/* Help Center Page */}
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/help")}>
+          <View style={styles.menuItemLeft}>
+            <LifeBuoy stroke="#4F7942" width={24} height={24} style={styles.icon} />
+            <Text style={styles.menuItemText}>Help Center</Text>
           </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.row}>
-            <User stroke="green" width={24} height={24} style={styles.icon} />
+
+        {/* Account Settings Page */}
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/accountSettings")}>
+          <View style={styles.menuItemLeft}>
+            <Settings stroke="#4F7942" width={24} height={24} style={styles.icon} />
             <Text style={styles.menuItemText}>Account Settings</Text>
           </View>
-          <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <LogOut stroke="red" width={24} height={24} style={styles.icon} />
+        <Text style={styles.logoutButtonText}>Log Out</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -145,142 +126,141 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 15,
   },
-  card: {
+  header: {
     backgroundColor: "white",
-    borderRadius: 8,
-    padding: 16,
-    margin: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  batteryItem: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  batteryText: {
-    fontWeight: "500",
-  },
-  batteryHealth: {
-    color: "#666",
-  },
-  button: {
-    backgroundColor: "green",
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "600",
-  },
-  outlineButton: {
-    borderColor: "green",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  outlineButtonText: {
-    color: "green",
-    fontWeight: "600",
-  },
-  detailsCard: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  detailText: {
-    marginBottom: 4,
-  },
-  mapPlaceholder: {
-    height: 200,
-    backgroundColor: "#ddd",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  mapPlaceholderText: {
-    color: "#666",
-  },
-  recycleCenter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
-  },
-  recycleCenterName: {
-    fontWeight: "500",
-  },
-  recycleCenterDistance: {
-    color: "#666",
-  },
-  profileHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
+    padding: 25,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+    marginBottom: 15,
+    borderRadius: 10,
   },
   profileImage: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginRight: 16,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: "#4F7942",
   },
   profileName: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 26,
+    fontWeight: "700",
+    marginBottom: 5,
+    color: "#333",
   },
   profileEmail: {
-    color: "#666",
+    fontSize: 15,
+    color: "#777",
   },
-  menuItem: {
+  infoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  infoSection: {
+    flex: 1,
+    backgroundColor: "white",
+    padding: 15,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4F7942",
+    marginBottom: 5,
+  },
+  sectionContent: {
+    fontSize: 16,
+    color: "#333",
+  },
+  recentItemsContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  recentItemsTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+    color: "#333",
+  },
+  recentItemsList: {
+    maxHeight: 200,
+  },
+  itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#e0e0e0",
+  },
+  itemName: {
+    fontSize: 16,
+    color: "#333",
+  },
+  itemDate: {
+    fontSize: 14,
+    color: "#777",
+  },
+  menuSection: {
+    backgroundColor: "white",
+    marginTop: 15,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    color: "#333",
+  },
+  menuItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  menuItemLeft: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   menuItemText: {
     fontSize: 16,
+    marginLeft: 12,
+    color: "#333",
   },
   icon: {
     marginRight: 8,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    marginTop: 25,
+    paddingVertical: 15,
+    borderRadius: 10,
+  },
+  logoutButtonText: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 10,
   },
 });

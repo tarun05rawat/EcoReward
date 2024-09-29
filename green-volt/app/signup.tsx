@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Button, TextInput, View, Text, Image, StyleSheet } from "react-native";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 export default function SignUpScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
+  const db = getFirestore();
 
   async function handleSignUp() {
     setLoading(true);
@@ -19,7 +23,17 @@ export default function SignUpScreen() {
         password
       );
       const user = userCredential.user;
-      router.replace("/(app)/(tabs)/profile");
+
+      // Save the user's additional data in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        city: city,
+        email: email,
+        points: 250, // default points
+        ranking: "#42", // example ranking
+      });
+
+      router.replace("/(app)/(tabs)/");
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
@@ -45,6 +59,20 @@ export default function SignUpScreen() {
         <Text style={styles.header}>Sign Up</Text>
         <View style={styles.inputContainer}>
           <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Name"
+            placeholderTextColor="#999"
+            style={styles.input}
+          />
+          <TextInput
+            value={city}
+            onChangeText={setCity}
+            placeholder="City"
+            placeholderTextColor="#999"
+            style={styles.input}
+          />
+          <TextInput
             value={email}
             onChangeText={setEmail}
             placeholder="Email"
@@ -63,7 +91,7 @@ export default function SignUpScreen() {
             title={loading ? "Signing Up..." : "Sign Up"}
             onPress={handleSignUp}
             disabled={loading}
-            color="#876464"
+            color="black"
           />
           <Text style={styles.linkText}>Already have an account?</Text>
           <Button
@@ -76,6 +104,9 @@ export default function SignUpScreen() {
     </View>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -91,10 +122,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: 300,
-    height: 250,
-    marginBottom: 10,
+    width: 400,
+    height: 350,
     marginTop: -30,
+    backgroundColor: 'transparent',
   },
   signupBox: {
     margin: 60,

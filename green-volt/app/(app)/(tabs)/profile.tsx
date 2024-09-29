@@ -1,264 +1,207 @@
-import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Alert,
-  FlatList,
-} from "react-native";
-import { Award, Battery, Bell, HelpCircle, LogOut } from "react-native-feather";
-import { useRouter } from "expo-router";
-import { getAuth, signOut } from "firebase/auth";
+import React from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Ionicons } from '@expo/vector-icons'
 
-const RECENT_ITEMS = [
-  { id: "1", name: "AA Battery", date: "2023-09-25" },
-  { id: "2", name: "Coca Cola Can", date: "2023-09-24" },
-  { id: "3", name: "Harry Potter Book", date: "2023-09-23" },
-  { id: "4", name: "Move-in Carton", date: "2023-09-22" },
-  { id: "5", name: "Old Floppy Disk", date: "2023-09-21" },
-];
+type Campaign = {
+  id: number;
+  name: string;
+  description: string;
+  icon: keyof typeof Ionicons.glyphMap; // To match the Ionicons icon names
+  type: 'internal' | 'affiliate';
+  action?: string; // Optional, as it's not always defined
+  brand?: string; // Optional, only used for affiliate campaigns
+  discount?: string; // Optional, only used for affiliate campaigns
+  link?: string; // Optional, only used for affiliate campaigns
+}
 
-export default function ProfileScreen() {
-  const router = useRouter();
-  const auth = getAuth();
+export default function CampaignScreen() {
+  const campaigns: Campaign[] = [
+    {
+      id: 1,
+      name: 'Tree Plantation Drive',
+      description: 'Plant a tree for every 1000 points redeemed.',
+      icon: 'leaf-outline',
+      type: 'internal',
+      action: 'Participate',
+    },
+    {
+      id: 2,
+      name: 'EcoStore Recycling Challenge',
+      description: 'Recycle 5 batteries and get 30% off on EcoStore products.',
+      icon: 'battery-charging-outline',
+      type: 'affiliate',
+      brand: 'EcoStore',
+      discount: '30%',
+      link: 'https://ecostore.com/recycling-challenge',
+    },
+    {
+      id: 3,
+      name: 'GreenThreads Upcycling Workshop',
+      description: 'Learn to upcycle old clothes and get 20% off on sustainable fashion.',
+      icon: 'shirt-outline',
+      type: 'affiliate',
+      brand: 'GreenThreads',
+      discount: '20%',
+      link: 'https://greenthreads.com/upcycling-workshop',
+    },
+  ]
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        Alert.alert("Logged Out", "You have been logged out successfully.", [
-          { text: "OK", onPress: () => router.replace("/signin") },
-        ]);
-      })
-      .catch((error) => {
-        Alert.alert("Error", "An unexpected error occurred. Please try again.");
-      });
-  };
+  const handleParticipate = (campaign: Campaign) => {
+    if (campaign.type === 'affiliate' && campaign.link) {
+      Linking.openURL(campaign.link)
+    } else {
+      // Handle internal campaign participation
+      console.log(`Participating in ${campaign.name}`)
+    }
+  }
 
-  const renderItem = ({
-    item,
-  }: {
-    item: { id: string; name: string; date: string };
-  }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemDate}>{item.date}</Text>
-    </View>
-  );
+  const renderCampaignItem = (campaign: Campaign) => (
+    <TouchableOpacity key={campaign.id} style={styles.campaignItem} onPress={() => handleParticipate(campaign)}>
+      <View style={styles.campaignIcon}>
+        <Ionicons name={campaign.icon} size={24} color="#4CAF50" />
+      </View>
+      <View style={styles.campaignInfo}>
+        <Text style={styles.campaignName}>{campaign.name}</Text>
+        <Text style={styles.campaignDescription}>{campaign.description}</Text>
+        {campaign.type === 'affiliate' && campaign.discount && campaign.brand && (
+          <Text style={styles.affiliateInfo}>{campaign.discount} off at {campaign.brand}</Text>
+        )}
+      </View>
+      <TouchableOpacity style={styles.participateButton} onPress={() => handleParticipate(campaign)}>
+        <Text style={styles.participateButtonText}>{campaign.action || 'Participate'}</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  )
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Eco-Friendly Campaigns</Text>
+      <ScrollView style={styles.content}>
         <Image
-          source={{ uri: "https://via.placeholder.com/150" }}
-          style={styles.profileImage}
+          source={{ uri: 'https://example.com/eco-campaign-image.jpg' }}
+          style={styles.campaignImage}
         />
-        <Text style={styles.profileName}>John Doe</Text>
-        <Text style={styles.profileEmail}>john.doe@example.com</Text>
-      </View>
-
-      {/* Display CITY, POINTS, and RANKING side by side */}
-      <View style={styles.infoRow}>
-        <View style={styles.infoSection}>
-          <Text style={styles.sectionHeader}>CITY</Text>
-          <Text style={styles.sectionContent}>New York City</Text>
-        </View>
-
-        <View style={styles.infoSection}>
-          <Text style={styles.sectionHeader}>POINTS</Text>
-          <Text style={styles.sectionContent}>250 points</Text>
-        </View>
-
-        <View style={styles.infoSection}>
-          <Text style={styles.sectionHeader}>RANKING</Text>
-          <Text style={styles.sectionContent}>#42 in your city</Text>
-        </View>
-      </View>
-
-      <View style={styles.recentItemsContainer}>
-        <Text style={styles.recentItemsTitle}>Recent Recycled Items</Text>
-        <FlatList
-          data={RECENT_ITEMS}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          style={styles.recentItemsList}
-        />
-      </View>
-
-      <View style={styles.menuSection}>
-        <Text style={styles.sectionTitle}>Support</Text>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <HelpCircle
-              stroke="#4F7942"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuItemText}>Help Center</Text>
+        <Text style={styles.description}>
+          Join our eco-friendly campaigns and make a positive impact on the environment. Participate in
+          tree planting, recycling challenges, and sustainable fashion initiatives. Earn rewards and
+          exclusive discounts while contributing to a greener planet!
+        </Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Ionicons name="leaf-outline" size={24} color="#4CAF50" />
+            <Text style={styles.statNumber}>5,234</Text>
+            <Text style={styles.statLabel}>Trees Planted</Text>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Award
-              stroke="#4F7942"
-              width={24}
-              height={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuItemText}>Account Settings</Text>
+          <View style={styles.statItem}>
+            <Ionicons name="people-outline" size={24} color="#4CAF50" />
+            <Text style={styles.statNumber}>1,892</Text>
+            <Text style={styles.statLabel}>Participants</Text>
           </View>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <LogOut stroke="red" width={24} height={24} style={styles.icon} />
-        <Text style={styles.logoutButtonText}>Log Out</Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
+        </View>
+        <Text style={styles.sectionTitle}>Active Campaigns</Text>
+        {campaigns.map(renderCampaignItem)}
+      </ScrollView>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    paddingHorizontal: 15,
+    backgroundColor: '#F5F5F5',
   },
-  header: {
-    backgroundColor: "white",
-    alignItems: "center",
-    padding: 25,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    marginBottom: 15,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#333',
+  },
+  content: {
+    paddingHorizontal: 20,
+  },
+  campaignImage: {
+    width: '100%',
+    height: 200,
     borderRadius: 10,
-  },
-  profileImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: "#4F7942",
-  },
-  profileName: {
-    fontSize: 26,
-    fontWeight: "700",
-    marginBottom: 5,
-    color: "#333",
-  },
-  profileEmail: {
-    fontSize: 15,
-    color: "#777",
-  },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
-  infoSection: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 15,
-    marginHorizontal: 5,
-    borderRadius: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  sectionHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4F7942",
-    marginBottom: 5,
-  },
-  sectionContent: {
-    fontSize: 16,
-    color: "#333",
-  },
-  recentItemsContainer: {
-    backgroundColor: "white",
-    padding: 20,
     marginBottom: 20,
-    borderRadius: 10,
   },
-  recentItemsTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 10,
-    color: "#333",
-  },
-  recentItemsList: {
-    maxHeight: 200,
-  },
-  itemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  itemName: {
+  description: {
     fontSize: 16,
-    color: "#333",
+    color: '#333',
+    lineHeight: 24,
+    marginBottom: 20,
   },
-  itemDate: {
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 30,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    marginTop: 5,
+  },
+  statLabel: {
     fontSize: 14,
-    color: "#777",
-  },
-  menuSection: {
-    backgroundColor: "white",
-    marginTop: 15,
-    paddingVertical: 12,
-    borderRadius: 10,
+    color: '#666',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    color: "#333",
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 15,
   },
-  menuItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  menuItemLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  menuItemText: {
-    fontSize: 16,
-    marginLeft: 12,
-    color: "#333",
-  },
-  icon: {
-    marginRight: 8,
-  },
-  logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    marginTop: 25,
-    paddingVertical: 15,
+  campaignItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
     borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  logoutButtonText: {
-    color: "red",
+  campaignIcon: {
+    backgroundColor: '#E8F5E9',
+    borderRadius: 20,
+    padding: 10,
+    marginRight: 15,
+  },
+  campaignInfo: {
+    flex: 1,
+  },
+  campaignName: {
     fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 10,
+    fontWeight: 'bold',
+    color: '#333',
   },
-});
+  campaignDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 2,
+  },
+  affiliateInfo: {
+    fontSize: 12,
+    color: '#4CAF50',
+    marginTop: 2,
+  },
+  participateButton: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  participateButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+})
