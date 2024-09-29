@@ -1,13 +1,46 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { User, ChevronRight, Award, Battery, Bell, HelpCircle, LogOut } from 'react-native-feather';
+import React from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+} from "react-native";
+import {
+  User,
+  ChevronRight,
+  Award,
+  Battery,
+  Bell,
+  HelpCircle,
+  LogOut,
+} from "react-native-feather";
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
+  const router = useRouter();
+  const auth = getAuth();
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        Alert.alert("Logged Out", "You have been logged out successfully.", [
+          { text: "OK", onPress: () => router.replace("/signin") },
+        ]);
+      })
+      .catch((error) => {
+        Alert.alert("Error", `Failed to log out: ${error.message}`);
+      });
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/150' }}
+          source={{ uri: "https://via.placeholder.com/150" }}
           style={styles.profileImage}
         />
         <Text style={styles.profileName}>John Doe</Text>
@@ -43,7 +76,12 @@ export default function ProfileScreen() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.menuItemLeft}>
-            <Battery stroke="green" width={24} height={24} style={styles.icon} />
+            <Battery
+              stroke="green"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>My Batteries</Text>
           </View>
           <ChevronRight stroke="#999" width={24} height={24} />
@@ -56,6 +94,7 @@ export default function ProfileScreen() {
           <ChevronRight stroke="#999" width={24} height={24} />
         </TouchableOpacity>
       </View>
+
       <View style={styles.card}>
         <Text style={styles.title}>Battery Details</Text>
         <View style={styles.detailsCard}>
@@ -72,11 +111,17 @@ export default function ProfileScreen() {
           <Text style={styles.outlineButtonText}>View Usage History</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.menuSection}>
         <Text style={styles.sectionTitle}>Support</Text>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.menuItemLeft}>
-            <HelpCircle stroke="green" width={24} height={24} style={styles.icon} />
+            <HelpCircle
+              stroke="green"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>Help Center</Text>
           </View>
           <ChevronRight stroke="#999" width={24} height={24} />
@@ -90,7 +135,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <LogOut stroke="red" width={24} height={24} style={styles.icon} />
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
@@ -101,67 +146,14 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
-    margin: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  button: {
-    backgroundColor: 'green',
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  outlineButton: {
-    borderColor: 'green',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  outlineButtonText: {
-    color: 'green',
-    fontWeight: '600',
-  },
-  detailsCard: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  detailText: {
-    marginBottom: 4,
+    backgroundColor: "#f0f0f0",
   },
   header: {
-    backgroundColor: 'white',
-    alignItems: 'center',
+    backgroundColor: "white",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   profileImage: {
     width: 100,
@@ -171,68 +163,68 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   profileEmail: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 10,
   },
   editButton: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
   },
   editButtonText: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
   },
   statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "white",
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   statItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'green',
+    fontWeight: "bold",
+    color: "green",
   },
   statLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   menuSection: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     marginTop: 20,
     paddingVertical: 10,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     paddingHorizontal: 15,
     paddingVertical: 10,
-    color: '#333',
+    color: "#333",
   },
   menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   menuItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   menuItemText: {
     fontSize: 16,
@@ -241,18 +233,71 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 8,
   },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 16,
+    margin: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  button: {
+    backgroundColor: "green",
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "600",
+  },
+  outlineButton: {
+    borderColor: "green",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  outlineButtonText: {
+    color: "green",
+    fontWeight: "600",
+  },
+  detailsCard: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+  },
+  detailText: {
+    marginBottom: 4,
+  },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
     marginTop: 20,
     paddingVertical: 15,
   },
   logoutButtonText: {
-    color: 'red',
+    color: "red",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 10,
   },
 });
