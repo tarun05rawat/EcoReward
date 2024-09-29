@@ -35,7 +35,7 @@ export default function AskMePage() {
           },
           { role: "user", content: input },
         ],
-        max_tokens: 200,
+        max_tokens: 60,
       };
 
       const response = await fetch(OPENAI_API_URL, {
