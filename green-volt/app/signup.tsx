@@ -55,6 +55,7 @@ export default function SignUpScreen() {
           resizeMode="contain"
         />
       </View>
+      <Text style={styles.sign_title}>Sign Up</Text>
       <View style={styles.signupBox}>
         <Text style={styles.header}>Sign Up</Text>
         <View style={styles.inputContainer}>
@@ -117,13 +118,21 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 40,
   },
+  sign_title: {
+    fontSize: 32,
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 16,
+    marginTop: -20,
+  },
   logoContainer: {
     marginTop: 40,
     marginBottom: 20,
   },
   logo: {
-    width: 400,
-    height: 350,
+    width: 300,
+    height: 50,
     marginTop: -30,
     backgroundColor: 'transparent',
   },
