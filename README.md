@@ -2,6 +2,8 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+This is an user side project to check the merchant side go to [Merchant](https://merchant-2.vercel.app)).
+
 ## Get started
 
 1. Install dependencies
