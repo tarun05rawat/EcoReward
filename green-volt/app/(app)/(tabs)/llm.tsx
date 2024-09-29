@@ -9,33 +9,73 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
+
+const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+const OPENAI_API_KEY =
+  "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";
 
 export default function AskMePage() {
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-
+  const callOpenAIAPI = async (input: string) => {
     try {
-      // Make an actual API call to your Breadboard server
-      const response = await fetch("http://localhost:5000/query", {
-        // Replace with your actual backend URL if needed
+      const body = {
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: `You are Jack, a sustainability expert who excels in analyzing data, developing strategies, and implementing solutions for renewable energy, waste management, and sustainable product development. You focus on balancing environmental, social, and economic factors, always aiming for long-term sustainability while addressing immediate needs. Your approach is structured: you gather data, analyze risks and opportunities, and create scalable, viable solutions aligned with sustainability goals. Throughout, you remain committed to reducing environmental impact and promoting resource efficiency.`,
+          },
+          { role: "user", content: input },
+        ],
+        max_tokens: 200,
+      };
+
+      const response = await fetch(OPENAI_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
         },
-        body: JSON.stringify({ input: query }), // Send the query to the server
+        body: JSON.stringify(body),
       });
 
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await response.json();
-      setAnswer(data.output); // Set the answer from the API response
+      return data.choices[0].message.content.trim();
+    } catch (error) {
+      console.error("Error calling OpenAI API:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!query.trim()) {
+      Alert.alert("Error", "Please enter a question");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await callOpenAIAPI(query);
+      setAnswer(result);
     } catch (error) {
       setAnswer("Sorry, an error occurred while processing your request.");
+      Alert.alert(
+        "Error",
+        "Failed to get a response from the AI. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -58,21 +98,29 @@ export default function AskMePage() {
                 value={query}
                 onChangeText={setQuery}
                 multiline
+                accessible={true}
+                accessibilityLabel="Input field for your question"
+                accessibilityHint="Enter your question here and press Ask to get an answer"
               />
               <TouchableOpacity
                 style={styles.button}
                 onPress={handleSubmit}
                 disabled={isLoading}
+                accessible={true}
+                accessibilityLabel="Ask button"
+                accessibilityHint="Press to submit your question"
               >
-                <Text style={styles.buttonText}>
-                  {isLoading ? "Thinking..." : "Ask"}
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text style={styles.buttonText}>Ask</Text>
+                )}
               </TouchableOpacity>
               {answer !== "" && (
-                <View style={styles.answerContainer}>
+                <ScrollView style={styles.answerContainer}>
                   <Text style={styles.answerHeading}>Answer:</Text>
                   <Text style={styles.answerText}>{answer}</Text>
-                </View>
+                </ScrollView>
               )}
             </View>
           </ScrollView>
@@ -151,5 +199,6 @@ const styles = StyleSheet.create({
   answerText: {
     fontSize: 16,
     color: "#4B5563",
+    flexWrap: "wrap",
   },
 });
