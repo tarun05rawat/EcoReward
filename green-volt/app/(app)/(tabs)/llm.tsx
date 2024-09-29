@@ -21,11 +21,19 @@ export default function AskMePage() {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    // TODO: Replace this with your actual API call
     try {
-      // Simulating an API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setAnswer(`This is a placeholder answer for: "${query}"`);
+      // Make an actual API call to your Breadboard server
+      const response = await fetch("http://localhost:5000/query", {
+        // Replace with your actual backend URL if needed
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ input: query }), // Send the query to the server
+      });
+
+      const data = await response.json();
+      setAnswer(data.output); // Set the answer from the API response
     } catch (error) {
       setAnswer("Sorry, an error occurred while processing your request.");
     } finally {
