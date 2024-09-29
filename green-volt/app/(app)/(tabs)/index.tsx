@@ -9,7 +9,15 @@ import {
   Alert,
   FlatList,
 } from "react-native";
-import { Award, Battery, Bell, HelpCircle, LogOut, Settings, LifeBuoy } from "react-native-feather";
+import {
+  Award,
+  Battery,
+  Bell,
+  HelpCircle,
+  LogOut,
+  Settings,
+  LifeBuoy,
+} from "react-native-feather";
 import { useRouter } from "expo-router";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -91,25 +99,49 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Support</Text>
 
         {/* Info Page */}
-        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/info")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push("/info")}
+        >
           <View style={styles.menuItemLeft}>
-            <HelpCircle stroke="#4F7942" width={24} height={24} style={styles.icon} />
+            <HelpCircle
+              stroke="#4F7942"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>Info</Text>
           </View>
         </TouchableOpacity>
 
         {/* Help Center Page */}
-        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/help")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push("/help")}
+        >
           <View style={styles.menuItemLeft}>
-            <LifeBuoy stroke="#4F7942" width={24} height={24} style={styles.icon} />
+            <LifeBuoy
+              stroke="#4F7942"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>Help Center</Text>
           </View>
         </TouchableOpacity>
 
         {/* Account Settings Page */}
-        <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/accountSettings")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push("/accountSettings")}
+        >
           <View style={styles.menuItemLeft}>
-            <Settings stroke="#4F7942" width={24} height={24} style={styles.icon} />
+            <Settings
+              stroke="#4F7942"
+              width={24}
+              height={24}
+              style={styles.icon}
+            />
             <Text style={styles.menuItemText}>Account Settings</Text>
           </View>
         </TouchableOpacity>
