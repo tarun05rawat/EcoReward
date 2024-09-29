@@ -55,10 +55,7 @@ export default function InfoScreen() {
       </View>
 
       <ScrollView style={styles.content}>
-        <Image
-          source={{ uri: '' }}  // Replace with actual image URL
-          style={styles.logo}
-        />
+        
         <Text style={styles.appName}>{appInfo.name}</Text>
         <Text style={styles.version}>Version {appInfo.version}</Text>
         

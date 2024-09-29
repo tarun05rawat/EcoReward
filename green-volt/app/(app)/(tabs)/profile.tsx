@@ -78,10 +78,10 @@ export default function CampaignScreen() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Eco-Friendly Campaigns</Text>
       <ScrollView style={styles.content}>
-        <Image
+        {/* <Image
           source={{ uri: 'https://example.com/eco-campaign-image.jpg' }}
           style={styles.campaignImage}
-        />
+        /> */}
         <Text style={styles.description}>
           Join our eco-friendly campaigns and make a positive impact on the environment. Participate in
           tree planting, recycling challenges, and sustainable fashion initiatives. Earn rewards and
